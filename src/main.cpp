@@ -3,32 +3,40 @@
 #include <iostream>
 
 #include <arrayfire.h>
-
-#include "datatypes/typedefs.hpp"
+#include <cxxopts.hpp>
 
 #include "version.h"
 
 using namespace af;
 
-int main(int argc, char* argv[]) {
+void parse(int argc, const char* argv[]);
+
+int main(int argc, const char* argv[]) {
+
+    int deviceCount = getDeviceCount();
 
     std::cout << "Arrayfire Information:" << std::endl;
     std::cout << std::endl;
 
-    int device = argc > 1 ? atoi(argv[1]) : 0;
-    setDevice(device);
-    info();
+    for(int i=0;i<deviceCount;i++) {
+        setDevice(i);
+        info();
+    }
 
     std::cout << std::endl;
     std::cout << "Done." << std::endl;
 
-    /*
-    if(argc<2) {
-        cout <<"GPUCFD Version " << GPUCFD_VERSION_MAJOR << "."
-            << GPUCFD_VERSION_MINOR << endl;
-        return 1;
-    } else {
-        
+    parse(argc, argv);
+}
+
+void parse(int argc, const char* argv[]) {
+    try {
+        cxxopts::Options options(argv[0], " - example command line options");
+        options.positional_help("[optional args]").show_positional_help();
+        options.allow_unrecognised_options().add_options()
+        ("solver","choose solver");
+    } catch (const cxxopts::OptionException& e) {
+        std::cout << "error parsing options: " << e.what() << std::endl;
+        exit(1);
     }
-    */
 }
