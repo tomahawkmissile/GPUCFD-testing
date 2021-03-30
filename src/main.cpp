@@ -17,6 +17,9 @@ int main(int argc, const char* argv[]) {
     std::cout << "Version " << GPUCFD_VERSION_MAJOR << "." << GPUCFD_VERSION_MINOR << std::endl;
 
     parse(argc, argv);
+
+    TestCFD tcfd;
+    tcfd.main();
 }
 
 void printArrayFireInformation() {

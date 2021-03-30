@@ -13,14 +13,34 @@
 
 class TestCFD {
 
-public:
-    f32 TestCFD::getMaxCFL();
-    f32 TestCFD::getAverageCFL();
-    f32 TestCFD::getMaxDirectionalCFL(array arr, f32 d);
-    f32 TestCFD::getMinimumTimeStep(array arr, f32 d);
-    f32 TestCFD::computeTimeStep();
+private:
+    double endTime = 10;
+    double time = 0;
 
-    int TestCFD::main();
+    double timeStep = 0.0005; //default dt
+    float increment;
+    const bool adjustableTimeStep = false;
+
+    double avgCFL = 0;
+    const double maxCFL = 0.75;
+
+    float dx=1, dy=1, dz=1;
+
+    af::array ux = af::constant(0, GRID_SIZE, GRID_SIZE+1, GRID_SIZE+1, f64); //velocity arrays
+    af::array uy = af::constant(0, GRID_SIZE+1, GRID_SIZE, GRID_SIZE+1, f64);
+    af::array uz = af::constant(0, GRID_SIZE+1, GRID_SIZE+1, GRID_SIZE, f64);
+
+    af::array p = af::constant(0, GRID_SIZE+1, GRID_SIZE+1, GRID_SIZE+1, f64); //pressure array
+
+public:
+    float getMaxCFL();
+    float getAverageCFL();
+    float getMaxDirectionalCFL(af::array arr, float d);
+    float getMinimumTimeStep(af::array arr, float d);
+    float computeTimeStep();
+
+    void printData();
+    int main();
 };
 
 #endif

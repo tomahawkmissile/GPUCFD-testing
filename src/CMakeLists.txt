@@ -5,7 +5,7 @@ project(GPUCFD VERSION 1.0)
 add_compile_options("-O3")
 add_compile_options("-march=native")
 
-add_executable(GPUCFD main.cpp)
+add_executable(GPUCFD main.cpp testcfd.cpp)
 
 configure_file(version.h.in version.h)
 target_include_directories(GPUCFD PUBLIC "${PROJECT_BINARY_DIR}")
