@@ -7,15 +7,22 @@
 
 #include "version.h"
 
+#include "testcfd.hpp"
+
 using namespace af;
 
 void parse(int argc, const char* argv[]);
 
 int main(int argc, const char* argv[]) {
+    std::cout << "Version " << GPUCFD_VERSION_MAJOR << "." << GPUCFD_VERSION_MINOR << std::endl;
 
+    parse(argc, argv);
+}
+
+void printArrayFireInformation() {
     int deviceCount = getDeviceCount();
 
-    std::cout << "Arrayfire Information:" << std::endl;
+    std::cout << "Arrayfire information:" << std::endl;
     std::cout << std::endl;
 
     for(int i=0;i<deviceCount;i++) {
@@ -24,17 +31,23 @@ int main(int argc, const char* argv[]) {
     }
 
     std::cout << std::endl;
-    std::cout << "Done." << std::endl;
-
-    parse(argc, argv);
+    std::cout << "done." << std::endl;
 }
 
 void parse(int argc, const char* argv[]) {
     try {
-        cxxopts::Options options(argv[0], " - example command line options");
-        options.positional_help("[optional args]").show_positional_help();
-        options.allow_unrecognised_options().add_options()
-        ("solver","choose solver");
+        cxxopts::Options options("GPUCFD", "ArrayFire based program");
+        options.add_options()
+        ("d,device","choose device",cxxopts::value<std::string>())
+        ("g,debug", "enable debug messages",cxxopts::value<bool>() -> default_value("false"));
+
+        auto result = options.parse(argc, argv);
+
+        try {
+            bool debugEnabled = result["debug"].as<bool>();
+            if(debugEnabled) printArrayFireInformation();
+        } catch (const cxxopts::OptionException& e) {}
+
     } catch (const cxxopts::OptionException& e) {
         std::cout << "error parsing options: " << e.what() << std::endl;
         exit(1);
