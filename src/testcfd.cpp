@@ -38,6 +38,13 @@ float TestCFD::computeTimeStep() {
     }
 }
 
+void TestCFD::setBoundaryConditions() {
+    ux(af::span, GRID_SIZE) = 1.0;
+    ux(af::span, af::span, GRID_SIZE-1) = 1.0;
+
+    //Velocity of 1 at boundary
+}
+
 void TestCFD::printData() {
     std::cout << "Time step is: " << increment << std::endl;
     std::cout << "Current time is: " << time << std::endl;
@@ -48,6 +55,8 @@ int TestCFD::main() {
 
     int i,j,k; //Iteration vars
     float Re = 3200.0; //Reynold's number
+
+    setBoundaryConditions();
 
     int iterations = 0;
     while(time <= endTime) {
@@ -60,6 +69,13 @@ int TestCFD::main() {
         time += (time+increment>endTime ? endTime-time : increment); //Ensure simulation does not pass endTime
 
         //Insert CFD code here
+        // ...
+        //Transient simulation
+
+
+        //Solve u-momentum
+        
+
 
         if(iterations % 1000 == 0) {
             printData();
